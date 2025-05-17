@@ -1,3 +1,4 @@
+import LikeButton from "./LikeButton";
 import { PostType } from "./Posts";
 
 interface Props {
@@ -39,10 +40,7 @@ export default function Post({ post }: Props) {
             </div>
 
             <div className="flex justify-between text-sm text-gray-600">
-                <div className="flex items-center">
-                <span className="mr-1">🤍❤️</span>
-                <span>{0}</span>
-                </div>
+                <LikeButton postId={post.id}/>
                 <div className="flex items-center">
                 <span className="mr-1">💬</span>
                 <span>{0}</span>
