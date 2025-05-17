@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 
 interface NewPost {
     content: string;
+    email: string;
     avatar_url: string | null;
 }
 
@@ -50,7 +51,7 @@ export default function NewPost() {
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
-        mutate({post: {content, avatar_url: user?.user_metadata.avatar_url || null}, image: file});
+        mutate({post: {content, email: user?.user_metadata.email || null, avatar_url: user?.user_metadata.avatar_url || null}, image: file});
     }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
