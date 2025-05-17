@@ -12,7 +12,7 @@ export interface PostType {
 };
 
 const getPosts = async (): Promise<PostType[]> => {
-    const { data, error } = await supabase.from("posts").select("*").limit(10).order("created_at", {ascending: true});
+    const { data, error } = await supabase.from("posts").select("*").limit(10).order("created_at", {ascending: false});
 
     if(error) throw new Error(error.message);
 
