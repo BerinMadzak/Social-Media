@@ -19,7 +19,7 @@ const uploadImage = async (image: File) => {
 
     const { data } = supabase.storage.from("post-images").getPublicUrl(path);
 
-    return data;
+    return data.publicUrl;
 }
 
 const createPost = async (post: NewPost, image: File | null) => {
