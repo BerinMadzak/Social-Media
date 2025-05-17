@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import Post from "./Post";
+import { useState } from "react";
 
 export interface PostType {
     id: number;
@@ -20,6 +21,8 @@ const getPosts = async (): Promise<PostType[]> => {
 }
 
 export default function Posts() {
+    const [displayImage, setDisplayImage] = useState<string | null>(null);
+
     const { data, error, isLoading } = useQuery<PostType[], Error>({queryKey: ["posts"], queryFn: getPosts});
 
     if(isLoading) return <div>Loading...</div>;
@@ -27,8 +30,19 @@ export default function Posts() {
     if(error) return <div>{error.message}</div>;
 
     return (
-        <div className="flex flex-wrap flex-column gap-6 justify-center">
-            {data?.map((post, key) => (<Post post={post} key={key} />))}
+        <div>
+            {displayImage &&
+                <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex justify-center items-center z-50" onClick={() => setDisplayImage(null)} >
+                    <img 
+                        src={displayImage} 
+                        alt="Post image" 
+                        className="max-w-full max-h-full object-contain cursor-pointer"
+                    />
+                </div>
+            }
+            <div className="flex flex-wrap flex-column gap-6 justify-center">
+                {data?.map((post, key) => (<Post post={post} setDisplayImage={setDisplayImage} key={key} />))}
+            </div>
         </div>
     );
 }

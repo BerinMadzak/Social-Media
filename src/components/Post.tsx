@@ -3,6 +3,7 @@ import { PostType } from "./Posts";
 
 interface Props {
     post: PostType;
+    setDisplayImage: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 const calculateTime = (created_at: string) => {
@@ -19,7 +20,7 @@ const calculateTime = (created_at: string) => {
     return `${days} days ago`;
 }
 
-export default function Post({ post }: Props) {
+export default function Post({ post, setDisplayImage }: Props) {
     return (
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4 w-[80%]">
             <div className="flex items-center mb-2">
@@ -35,7 +36,12 @@ export default function Post({ post }: Props) {
             <div className="mb-4">
                 <p className="text-base">{post.content}</p>
                 {post.image_url && (
-                <img src={post.image_url} alt="Post image" className="w-full mt-4 rounded-lg object-cover h-60 max-w-full" />
+                    <img 
+                        src={post.image_url} 
+                        alt="Post image" 
+                        className="w-full mt-4 rounded-lg object-cover h-60 max-w-full cursor-pointer" 
+                        onClick={() => setDisplayImage(post.image_url!)}
+                    />
                 )}
             </div>
 
