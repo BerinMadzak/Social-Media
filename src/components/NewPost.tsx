@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { supabase } from "../supabase-client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
 
 interface NewPost {
@@ -23,7 +23,6 @@ const uploadImage = async (image: File) => {
 }
 
 const createPost = async (post: NewPost, image: File | null) => {
-    
     let image_url = null;
     if(image !== null) image_url = await uploadImage(image);
 
@@ -41,10 +40,14 @@ export default function NewPost() {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const { user } = useAuth();
+    const queryClient = useQueryClient();
 
     const { mutate, isPending, isError } = useMutation({
         mutationFn: (data: {post: NewPost, image: File | null}) => {
             return createPost(data.post, data.image);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ["posts"]});
         }
     });
 
