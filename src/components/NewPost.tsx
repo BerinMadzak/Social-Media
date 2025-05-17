@@ -1,9 +1,11 @@
 import { useRef, useState } from "react";
 import { supabase } from "../supabase-client";
 import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "../context/AuthContext";
 
 interface NewPost {
     content: string;
+    avatar_url: string | null;
 }
 
 const uploadImage = async (image: File) => {
@@ -37,6 +39,8 @@ export default function NewPost() {
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+    const { user } = useAuth();
+
     const { mutate } = useMutation({
         mutationFn: (data: {post: NewPost, image: File | null}) => {
             return createPost(data.post, data.image);
@@ -46,7 +50,7 @@ export default function NewPost() {
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
-        mutate({post: {content}, image: file});
+        mutate({post: {content, avatar_url: user?.user_metadata.avatar_url || null}, image: file});
     }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
