@@ -1,27 +1,70 @@
 import { useRef, useState } from "react";
+import { supabase } from "../supabase-client";
+import { useMutation } from "@tanstack/react-query";
+
+interface NewPost {
+    content: string;
+}
+
+const uploadImage = async (image: File) => {
+    const path = `${Date.now()}-${image.name}`;
+    
+    const { error } = await supabase.storage.from("post-images").upload(path, image);
+    console.log(error);
+
+    if(error) throw new Error(error.message);
+
+    const { data } = supabase.storage.from("post-images").getPublicUrl(path);
+
+    return data;
+}
+
+const createPost = async (post: NewPost, image: File | null) => {
+    
+    let image_url = null;
+    if(image !== null) image_url = await uploadImage(image);
+
+    const {data, error} = await supabase.from("posts").insert({...post, image_url});
+
+    if(error) throw new Error(error.message);
+
+    return data;
+};
 
 export default function NewPost() {
-    const [content, setContent] = useState<string | null>(null);
-    const [fileName, setFileName] = useState<string | null>(null);
+    const [content, setContent] = useState<string>("");
+    const [file, setFile] = useState<File | null>(null);
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    const { mutate } = useMutation({
+        mutationFn: (data: {post: NewPost, image: File | null}) => {
+            return createPost(data.post, data.image);
+        }
+    });
+
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+
+        mutate({post: {content}, image: file});
+    }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if(file) {
-            setFileName(file.name);
+            setFile(file);
         }
     }
 
     const handleRemoveFile = () => {
-        setFileName(null);
+        setFile(null);
         if(fileInputRef.current) {
             fileInputRef.current.value = "";
         }
     };
 
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <textarea 
                 cols={100} 
                 rows={6} 
@@ -29,6 +72,7 @@ export default function NewPost() {
                 className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                 maxLength={300}
                 required
+                onChange={(e) => setContent(e.target.value)}
             ></textarea>
             <div className="flex gap-x-2">
                 <div className="flex items-center justify-center w-full">
@@ -60,9 +104,9 @@ export default function NewPost() {
                             onChange={handleFileChange}
                         />
                     </label>
-                    {fileName && (
+                    {file && (
                         <div className="px-4 py-2 bg-blue-100 text-blue-700 rounded-md shadow-md h-full">
-                            Selected file: {fileName}
+                            Selected file: {file.name}
                             <button 
                                 onClick={handleRemoveFile} 
                                 className="ml-4 text-sm text-red-500 hover:text-red-700 focus:outline-none"
