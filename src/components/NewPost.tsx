@@ -42,7 +42,7 @@ export default function NewPost() {
 
     const { user } = useAuth();
 
-    const { mutate } = useMutation({
+    const { mutate, isPending, isError } = useMutation({
         mutationFn: (data: {post: NewPost, image: File | null}) => {
             return createPost(data.post, data.image);
         }
@@ -121,8 +121,11 @@ export default function NewPost() {
                         </div>
                     )}
                 </div>
-                <button className="w-[20%] rounded bg-blue-600 font-bold text-white cursor-pointer">Post</button>
+                <button className="w-[20%] rounded bg-blue-600 font-bold text-white cursor-pointer" disabled={isPending}>
+                    {isPending ? "Posting..." : "Post"}
+                </button>
             </div>
+            {isError && <p className="text-red-500">Error creating a post</p>}
         </form>
     );
 }
