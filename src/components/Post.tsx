@@ -1,5 +1,7 @@
+import { useState } from "react";
 import LikeButton from "./LikeButton";
 import { PostType } from "./Posts";
+import CommentSection from "./CommentSection";
 
 interface Props {
     post: PostType;
@@ -21,6 +23,8 @@ const calculateTime = (created_at: string) => {
 }
 
 export default function Post({ post, setDisplayImage }: Props) {
+    const [showComments, setShowComments] = useState<boolean>(false);
+
     return (
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4 w-[80%]">
             <div className="flex items-center mb-2">
@@ -48,10 +52,14 @@ export default function Post({ post, setDisplayImage }: Props) {
             <div className="flex justify-between text-sm text-gray-600">
                 <LikeButton postId={post.id}/>
                 <div className="flex items-center">
-                <span className="mr-1">💬</span>
+                <span className="mr-1 cursor-pointer" onClick={(e) => setShowComments((prev) => !prev)}>💬</span>
                 <span>{0}</span>
                 </div>
             </div>
+            {showComments && <>
+                <hr className="my-5 text-gray-500"/>
+                <CommentSection post_id={post.id}/>
+            </>}
         </div>
     );
 }
