@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CommentType } from "./CommentSection"
 import { useAuth } from "../context/AuthContext";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import { calculateTime } from "./Post";
 import LikeButton from "./LikeButton";
@@ -30,12 +30,26 @@ const createReply = async(content: string, post_id: number, parent_comment_id: n
     if(error) throw new Error(error.message);
 }
 
+const getCommentCount = async(comment_id: number) => {
+    const { error, count } = await supabase.from("comments").select("*", {count: 'exact'}).eq("parent_comment_id", comment_id);
+
+    if(error) throw new Error(error.message);
+
+    return count as number;
+}
+
 export default function Comment({ comment, post_id }: Props) {
     const [showReply, setShowReply] = useState<boolean>(false);
     const [content, setContent] = useState<string>("");
 
     const { user } = useAuth();
     const queryClient = useQueryClient();
+
+    const { data: comment_count } = useQuery<number, Error>({
+        queryKey: ["comment_count", comment.id, false],
+        queryFn: () => getCommentCount(comment.id),
+        refetchInterval: 5000
+    });
     
     const { mutate, isPending, isError } = useMutation({
         mutationFn: (content: string) => createReply(content, post_id, comment.id, user?.id, user?.user_metadata.email, user?.user_metadata.avatar_url),
@@ -72,8 +86,8 @@ export default function Comment({ comment, post_id }: Props) {
             <div className="flex justify-between text-sm text-gray-600">
                 <LikeButton post_id={comment.id} is_post={false}/>
                 <div className="flex items-center">
-                <span className="mr-1 cursor-pointer" onClick={(e) => setShowReply((prev) => !prev)}>💬</span>
-                <span>{0}</span>
+                <span className="mr-1 cursor-pointer" onClick={() => setShowReply((prev) => !prev)}>💬</span>
+                <span>{comment_count}</span>
                 </div>
             </div>
 

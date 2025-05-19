@@ -2,6 +2,8 @@ import { useState } from "react";
 import LikeButton from "./LikeButton";
 import { PostType } from "./Posts";
 import CommentSection from "./CommentSection";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "../supabase-client";
 
 interface Props {
     post: PostType;
@@ -22,8 +24,22 @@ export const calculateTime = (created_at: string) => {
     return `${days} days ago`;
 }
 
+const getCommentCount = async(post_id: number) => {
+    const { error, count } = await supabase.from("comments").select("*", {count: 'exact'}).eq("post_id", post_id);
+
+    if(error) throw new Error(error.message);
+
+    return count as number;
+}
+
 export default function Post({ post, setDisplayImage }: Props) {
     const [showComments, setShowComments] = useState<boolean>(false);
+
+    const { data: comment_count } = useQuery<number, Error>({
+        queryKey: ["comment_count", post.id, true],
+        queryFn: () => getCommentCount(post.id),
+        refetchInterval: 5000
+    });
 
     return (
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4 w-[80%]">
@@ -52,8 +68,8 @@ export default function Post({ post, setDisplayImage }: Props) {
             <div className="flex justify-between text-sm text-gray-600">
                 <LikeButton post_id={post.id} is_post={true}/>
                 <div className="flex items-center">
-                <span className="mr-1 cursor-pointer" onClick={(e) => setShowComments((prev) => !prev)}>💬</span>
-                <span>{0}</span>
+                <span className="mr-1 cursor-pointer" onClick={() => setShowComments((prev) => !prev)}>💬</span>
+                <span>{comment_count}</span>
                 </div>
             </div>
             {showComments && <>
