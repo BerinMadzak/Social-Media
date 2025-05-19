@@ -85,6 +85,7 @@ export default function CommentSection({ post_id }: Props) {
             createCommment(comment, post_id, user?.id, user?.user_metadata.email, user?.user_metadata.avatar_url),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ["comments", post_id]});
+            queryClient.invalidateQueries({queryKey: ["comment_count", post_id, true]});
         }
     });
 

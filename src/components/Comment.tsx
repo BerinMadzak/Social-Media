@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import { calculateTime } from "./Post";
 import LikeButton from "./LikeButton";
+import DeleteConfirmation from "./DeleteConfirmation";
 
 interface Props {
     comment: CommentType & {
@@ -38,9 +39,17 @@ const getCommentCount = async(comment_id: number) => {
     return count as number;
 }
 
+
+const deleteComment = async(comment_id: number) => {
+    const { error } = await supabase.from("comments").delete().eq("id", comment_id);
+
+    if(error) throw new Error(error.message);
+}
+
 export default function Comment({ comment, post_id }: Props) {
     const [showReply, setShowReply] = useState<boolean>(false);
     const [content, setContent] = useState<string>("");
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<boolean>(false);
 
     const { user } = useAuth();
     const queryClient = useQueryClient();
@@ -55,7 +64,21 @@ export default function Comment({ comment, post_id }: Props) {
         mutationFn: (content: string) => createReply(content, post_id, comment.id, user?.id, user?.user_metadata.email, user?.user_metadata.avatar_url),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ["comments", post_id]});
+            queryClient.invalidateQueries({queryKey: ["comment_count", comment.id, false]});
             setContent("");
+        }
+    });
+
+    const { mutate: deleteMutate } = useMutation({
+        mutationFn: (comment_id: number) => {
+            return deleteComment(comment_id);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ["comments", post_id]});
+            queryClient.invalidateQueries({queryKey: ["comment_count", comment.post_id, true]});
+            if(comment.parent_comment_id) {
+                queryClient.invalidateQueries({queryKey: ["comment_count", comment.id, false]});
+            }
         }
     });
 
@@ -65,6 +88,23 @@ export default function Comment({ comment, post_id }: Props) {
         if(!content) return;
 
         mutate(content);
+    }
+
+    const handleDelete = () => {
+        setShowDeleteConfirmation(true);
+    }
+
+    const handleCancel = () => {
+        setShowDeleteConfirmation(false);
+    }
+
+    const handleDeleteConfirm = () => {
+        setShowDeleteConfirmation(false);
+        deleteMutate(comment.id);
+    }
+
+    const is_creator = () => {
+        return user?.id === comment.user_id;
     }
 
     return (
@@ -77,7 +117,18 @@ export default function Comment({ comment, post_id }: Props) {
                 <p className="font-semibold text-sm">{comment.email}</p>
                 <p className="text-gray-500 text-xs">{calculateTime(comment.created_at)}</p>
                 </div>
+                {user && is_creator() &&
+                    <span className="ml-auto cursor-pointer" onClick={handleDelete}>🗑️</span>
+                }
             </div>
+
+            {showDeleteConfirmation && 
+                <DeleteConfirmation
+                    isOpen={showDeleteConfirmation}
+                    onCancel={handleCancel}
+                    onConfirm={handleDeleteConfirm}
+                />
+            }
 
             <div className="mb-4">
                 <p className="text-base">{comment.content}</p>

@@ -7,13 +7,13 @@ interface NewPost {
     content: string;
     email: string;
     avatar_url: string | null;
+    user_id: string;
 }
 
 const uploadImage = async (image: File) => {
     const path = `${Date.now()}-${image.name}`;
     
     const { error } = await supabase.storage.from("post-images").upload(path, image);
-    console.log(error);
 
     if(error) throw new Error(error.message);
 
@@ -54,7 +54,11 @@ export default function NewPost() {
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
-        mutate({post: {content, email: user?.user_metadata.email || null, avatar_url: user?.user_metadata.avatar_url || null}, image: file});
+        mutate({
+            post: {content, email: user?.user_metadata.email 
+            || null, avatar_url: user?.user_metadata.avatar_url 
+            || null, user_id: user!.id}, image: file
+        });
     }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -10,6 +10,7 @@ export interface PostType {
     image_url?: string;
     avatar_url: string;
     email: string;
+    user_id: string;
 };
 
 const getPosts = async (): Promise<PostType[]> => {
