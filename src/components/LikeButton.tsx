@@ -3,53 +3,76 @@ import { useAuth } from "../context/AuthContext";
 import { supabase } from "../supabase-client";
 
 interface Props {
-    postId: number;
+    post_id: number;
+    is_post: boolean;
 };
 
 interface Like {
     id: number;
-    post_id: number;
+    post_id?: number;
+    comment_id?: number;
     user_id: string;
 };
 
-const like = async(postId: number, userId: string) => {
-    const { data } = await supabase.from("likes").select("*").eq("post_id", postId).eq("user_id", userId).maybeSingle();
-
-    if(data) {
-        const { error } = await supabase.from("likes").delete().eq("id", data.id);
-
-        if(error) throw new Error(error.message);
-    } else {
-        const { error } = await supabase.from("likes").insert({post_id: postId, user_id: userId});
+const like = async(id: number, user_id: string, is_post: boolean) => {
+    if(is_post) {
+        const { data } = await supabase.from("likes").select("*").eq("post_id", id).eq("user_id", user_id).maybeSingle();
     
-        if(error) throw new Error(error.message);
+        if(data) {
+            const { error } = await supabase.from("likes").delete().eq("id", data.id);
+    
+            if(error) throw new Error(error.message);
+        } else {
+            const { error } = await supabase.from("likes").insert({post_id: id, user_id: user_id});
+        
+            if(error) throw new Error(error.message);
+        }
+    } else {
+        const { data } = await supabase.from("likes").select("*").eq("comment_id", id).eq("user_id", user_id).maybeSingle();
+    
+        if(data) {
+            const { error } = await supabase.from("likes").delete().eq("id", data.id);
+    
+            if(error) throw new Error(error.message);
+        } else {
+            const { error } = await supabase.from("likes").insert({comment_id: id, user_id: user_id});
+        
+            if(error) throw new Error(error.message);
+        }
     }
 }
 
-const getLikes = async(postId: number): Promise<Like[]> => {
-    const { data, error } = await supabase.from("likes").select("*").eq("post_id", postId);
-
-    if(error) throw new Error(error.message);
-    return data as Like[];
+const getLikes = async(id: number, is_post: boolean): Promise<Like[]> => {
+    if(is_post) {
+        const { data, error } = await supabase.from("likes").select("*").eq("post_id", id);
+    
+        if(error) throw new Error(error.message);
+        return data as Like[];
+    } else {
+        const { data, error } = await supabase.from("likes").select("*").eq("comment_id", id);
+    
+        if(error) throw new Error(error.message);
+        return data as Like[];
+    }
 }
 
-export default function LikeButton({postId}: Props) {
+export default function LikeButton({post_id, is_post}: Props) {
     const { user } = useAuth();
     const queryClient = useQueryClient();
 
     const { data, isLoading, error } = useQuery<Like[], Error>({
-        queryKey: ["likes", postId],
-        queryFn: () => getLikes(postId),
+        queryKey: ["likes", post_id, is_post],
+        queryFn: () => getLikes(post_id, is_post),
         refetchInterval: 5000
     });
 
     const { mutate } = useMutation({ 
         mutationFn: () => {
             if(!user) throw new Error("You must be logged in to like");
-            return like(postId, user.id);
+            return like(post_id, user.id, is_post);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: ["likes", postId]});
+            queryClient.invalidateQueries({queryKey: ["likes", post_id, is_post]});
         }
     });
 

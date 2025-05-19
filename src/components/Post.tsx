@@ -8,7 +8,7 @@ interface Props {
     setDisplayImage: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const calculateTime = (created_at: string) => {
+export const calculateTime = (created_at: string) => {
     const now = new Date();
     const createdDate = new Date(created_at);
     const seconds = Math.floor((now.getTime() - createdDate.getTime()) / 1000);
@@ -50,7 +50,7 @@ export default function Post({ post, setDisplayImage }: Props) {
             </div>
 
             <div className="flex justify-between text-sm text-gray-600">
-                <LikeButton postId={post.id}/>
+                <LikeButton post_id={post.id} is_post={true}/>
                 <div className="flex items-center">
                 <span className="mr-1 cursor-pointer" onClick={(e) => setShowComments((prev) => !prev)}>💬</span>
                 <span>{0}</span>

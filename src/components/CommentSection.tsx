@@ -1,18 +1,30 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../supabase-client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Comment from "./Comment";
 
 interface Props {
     post_id: number;
 }
 
-interface CommentType {
+interface NewComment {
     content: string;
     parent_comment_id?: number | null;
 }
 
-const createCommment = async (comment: CommentType, post_id: number, user_id?: string, email?: string, avatar_url?: string) => {
+export interface CommentType {
+    id: number;
+    created_at: string;
+    post_id: number;
+    content: string;
+    user_id: string;
+    email: string;
+    avatar_url: string;
+    parent_comment_id?: number | null;
+}
+
+const createCommment = async (comment: NewComment, post_id: number, user_id?: string, email?: string, avatar_url?: string) => {
     if(!user_id) throw new Error("You must be logged in to comment");
 
     const { error } = await supabase.from("comments").insert({
@@ -27,12 +39,53 @@ const createCommment = async (comment: CommentType, post_id: number, user_id?: s
     if(error) throw new Error(error.message);
 }
 
+const getComments = async(post_id: number): Promise<CommentType[]> => {
+    const { data, error } = await supabase
+        .from("comments").select("*").eq("post_id", post_id).order("created_at", { ascending: false });
+
+    if(error) throw new Error(error.message);
+
+    return data as CommentType[];
+}
+
+const createCommentTree = (comments: CommentType[]): (CommentType & {children?: CommentType[]})[] => {
+    const map = new Map<number, CommentType & {children?: CommentType[]}>();
+    const roots: (CommentType & {children?: CommentType[]})[] = [];
+
+    comments.forEach((comment) => {
+        map.set(comment.id, {...comment, children: []});
+    });
+
+    comments.forEach((comment) => {
+        if(comment.parent_comment_id) {
+            const parent = map.get(comment.parent_comment_id);
+            if(parent) {
+                parent.children!.push(map.get(comment.id)!);
+            }
+        } else {
+            roots.push(map.get(comment.id)!);
+        }
+    });
+
+    return roots;
+}
+
 export default function CommentSection({ post_id }: Props) {
     const [content, setContent] = useState<string>("");
     const { user } = useAuth();
+    const queryClient = useQueryClient();
+
+    const { data, isLoading, error } = useQuery<CommentType[], Error>({
+        queryKey: ["comments", post_id],
+        queryFn: () => getComments(post_id)
+    });
 
     const { mutate, isPending, isError } = useMutation({
-        mutationFn: (comment: CommentType) => createCommment(comment, post_id, user?.id, user?.user_metadata.email, user?.user_metadata.avatar_url)
+        mutationFn: (comment: NewComment) => 
+            createCommment(comment, post_id, user?.id, user?.user_metadata.email, user?.user_metadata.avatar_url),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ["comments", post_id]});
+        }
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -42,7 +95,13 @@ export default function CommentSection({ post_id }: Props) {
 
         mutate({content: content, parent_comment_id: null});
         setContent("");
-    }
+    };
+
+    if(isLoading) return <div>Loading comments...</div>
+
+    if(isError) return <div>{error?.message}</div>
+
+    const commentTree = data ? createCommentTree(data) : [];
     
     return (
         <div>
@@ -68,6 +127,12 @@ export default function CommentSection({ post_id }: Props) {
             ) : (
                 <p>You must be logged in to comment</p>
             )}
+
+            <div className="mt-3">
+                {commentTree.map((comment, key) => ( 
+                   <Comment key={key} comment={comment} post_id={post_id} /> 
+                ))}
+            </div>
         </div>
     );
 }
