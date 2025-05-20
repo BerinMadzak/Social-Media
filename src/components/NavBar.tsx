@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function NavBar() {
-    const {signInWithGoogle, signOut, user} = useAuth();
+    const {signOut, user} = useAuth();
+
+    const navigate = useNavigate();
 
     const username = user?.user_metadata.user_name || user?.email;
 
@@ -30,12 +32,20 @@ export default function NavBar() {
                         </button>
                     </>
                 ) : (
-                    <button
-                        className="p-2 rounded bg-orange-500 cursor-pointer text-white font-bold"
-                        onClick={signInWithGoogle}
-                    >
-                        Sign in with Google
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            className="p-2 rounded bg-blue-500 cursor-pointer text-white font-bold"
+                            onClick={() => navigate("/signin")}
+                        >
+                            Sign in
+                        </button>
+                        <button
+                            className="p-2 rounded bg-orange-500 cursor-pointer text-white font-bold"
+                            onClick={() => navigate("/signup")}
+                        >
+                            Sign up
+                        </button>
+                    </div>
                 )}
             </div>
         </nav>

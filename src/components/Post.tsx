@@ -7,6 +7,7 @@ import { supabase } from "../supabase-client";
 import DeleteConfirmation from "./DeleteConfirmation";
 import { useAuth } from "../context/AuthContext";
 import TimeDisplay from "./TimeDisplay";
+import usePoster from "../hooks/usePoster";
 
 interface Props {
     post: PostType;
@@ -33,6 +34,7 @@ export default function Post({ post, setDisplayImage }: Props) {
 
     const { user } = useAuth();
     const queryClient = useQueryClient();
+    const { data: poster } = usePoster(post.user_id); 
 
     const { data: comment_count } = useQuery<number, Error>({
         queryKey: ["comment_count", post.id, true],
@@ -63,7 +65,7 @@ export default function Post({ post, setDisplayImage }: Props) {
     }
 
     const is_creator = () => {
-        return user?.id === post.user_id;
+        return poster && user?.id === poster.id;
     }
 
     if(isPending) return <div>Loading...</div>
@@ -72,11 +74,10 @@ export default function Post({ post, setDisplayImage }: Props) {
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4 w-[80%]">
             <div className="flex items-center mb-2">
                 <div className="w-10 h-10 mr-3 rounded-full overflow-hidden">
-                <img src={post.avatar_url} alt={`User avatar`} className="w-full h-full object-cover" />
+                <img src={poster?.image_url || "default-profile.png"} alt={`User avatar`} className="w-full h-full object-cover" />
                 </div>
                 <div>
-                <p className="font-semibold text-sm">{post.email}</p>
-                {/*<p className="text-gray-500 text-xs">{calculateTime(post.created_at)}</p>*/}
+                <p className="font-semibold text-sm">{poster?.username}</p>
                 <TimeDisplay timestamp={post.created_at}/>
                 </div>
                 {user && is_creator() &&

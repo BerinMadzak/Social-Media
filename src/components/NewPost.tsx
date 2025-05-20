@@ -5,8 +5,6 @@ import { useAuth } from "../context/AuthContext";
 
 interface NewPost {
     content: string;
-    email: string;
-    avatar_url: string | null;
     user_id: string;
 }
 
@@ -27,6 +25,8 @@ const createPost = async (post: NewPost, image: File | null) => {
     if(image !== null) image_url = await uploadImage(image);
 
     const {data, error} = await supabase.from("posts").insert({...post, image_url});
+
+    console.log(error);
 
     if(error) throw new Error(error.message);
 
@@ -55,9 +55,7 @@ export default function NewPost() {
         event.preventDefault();
 
         mutate({
-            post: {content, email: user?.user_metadata.email 
-            || null, avatar_url: user?.user_metadata.avatar_url 
-            || null, user_id: user!.id}, image: file
+            post: {content, user_id: user!.id}, image: file
         });
     }
 

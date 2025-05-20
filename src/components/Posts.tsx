@@ -9,7 +9,6 @@ export interface PostType {
     content: string;
     image_url?: string;
     avatar_url: string;
-    email: string;
     user_id: string;
 };
 

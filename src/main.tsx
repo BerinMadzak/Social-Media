@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import { AuthProvider } from './context/AuthContext'
+import SignUpPage from './pages/SignUpPage'
 
 const client = new QueryClient();
 
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {index: true, element: <HomePage />},
+      {path: '/signup', element: <SignUpPage />}
     ]
   }
 ]);

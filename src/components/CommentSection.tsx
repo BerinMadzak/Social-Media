@@ -19,8 +19,6 @@ export interface CommentType {
     post_id: number;
     content: string;
     user_id: string;
-    email: string;
-    avatar_url: string;
     parent_comment_id?: number | null;
 }
 
@@ -32,8 +30,6 @@ const createCommment = async (comment: NewComment, post_id: number, user_id?: st
         content: comment.content,
         parent_comment_id: comment.parent_comment_id || null,
         user_id: user_id,
-        email: email,
-        avatar_url: avatar_url
     });
 
     if(error) throw new Error(error.message);

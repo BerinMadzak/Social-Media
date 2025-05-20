@@ -6,6 +6,7 @@ import { supabase } from "../supabase-client";
 import LikeButton from "./LikeButton";
 import DeleteConfirmation from "./DeleteConfirmation";
 import TimeDisplay from "./TimeDisplay";
+import usePoster from "../hooks/usePoster";
 
 interface Props {
     comment: CommentType & {
@@ -24,8 +25,6 @@ const createReply = async(content: string, post_id: number, parent_comment_id: n
         content: content,
         parent_comment_id: parent_comment_id,
         user_id: user_id,
-        email: email,
-        avatar_url: avatar_url
     });
 
     if(error) throw new Error(error.message);
@@ -38,7 +37,6 @@ const getCommentCount = async(comment_id: number) => {
 
     return count as number;
 }
-
 
 const deleteComment = async(comment_id: number) => {
     const { error } = await supabase.from("comments").delete().eq("id", comment_id);
@@ -53,6 +51,7 @@ export default function Comment({ comment, post_id }: Props) {
 
     const { user } = useAuth();
     const queryClient = useQueryClient();
+    const { data: poster } = usePoster(comment.user_id);
 
     const { data: comment_count } = useQuery<number, Error>({
         queryKey: ["comment_count", comment.id, false],
@@ -61,7 +60,7 @@ export default function Comment({ comment, post_id }: Props) {
     });
     
     const { mutate, isPending, isError } = useMutation({
-        mutationFn: (content: string) => createReply(content, post_id, comment.id, user?.id, user?.user_metadata.email, user?.user_metadata.avatar_url),
+        mutationFn: (content: string) => createReply(content, post_id, comment.id, user?.id),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ["comments", post_id]});
             queryClient.invalidateQueries({queryKey: ["comment_count", comment.id, false]});
@@ -111,10 +110,10 @@ export default function Comment({ comment, post_id }: Props) {
         <div className="bg-gray-100 p-4 rounded-lg shadow-sm border border-gray-200 my-4">
             <div className="flex items-center mb-2">
                 <div className="w-10 h-10 mr-3 rounded-full overflow-hidden">
-                <img src={comment.avatar_url} alt={`User avatar`} className="w-full h-full object-cover" />
+                <img src={poster?.image_url || "default-profile.png"} alt={`User avatar`} className="w-full h-full object-cover" />
                 </div>
                 <div>
-                <p className="font-semibold text-sm">{comment.email}</p>
+                <p className="font-semibold text-sm">{poster?.username}</p>
                 <TimeDisplay timestamp={comment.created_at} />
                 </div>
                 {user && is_creator() &&
