@@ -26,9 +26,9 @@ export default function Posts() {
 
     const { data, error, isLoading } = useQuery<PostType[], Error>({queryKey: ["posts"], queryFn: getPosts});
 
-    if(isLoading) return <div>Loading...</div>;
+    if(isLoading) return <div className="text-white">Loading...</div>;
 
-    if(error) return <div>{error.message}</div>;
+    if(error) return <div className="text-red">{error.message}</div>;
 
     return (
         <div>

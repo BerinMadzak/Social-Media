@@ -3,9 +3,9 @@ import { CommentType } from "./CommentSection"
 import { useAuth } from "../context/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
-import { calculateTime } from "./Post";
 import LikeButton from "./LikeButton";
 import DeleteConfirmation from "./DeleteConfirmation";
+import TimeDisplay from "./TimeDisplay";
 
 interface Props {
     comment: CommentType & {
@@ -115,7 +115,7 @@ export default function Comment({ comment, post_id }: Props) {
                 </div>
                 <div>
                 <p className="font-semibold text-sm">{comment.email}</p>
-                <p className="text-gray-500 text-xs">{calculateTime(comment.created_at)}</p>
+                <TimeDisplay timestamp={comment.created_at} />
                 </div>
                 {user && is_creator() &&
                     <span className="ml-auto cursor-pointer" onClick={handleDelete}>🗑️</span>
@@ -125,6 +125,7 @@ export default function Comment({ comment, post_id }: Props) {
             {showDeleteConfirmation && 
                 <DeleteConfirmation
                     isOpen={showDeleteConfirmation}
+                    isPost={false}
                     onCancel={handleCancel}
                     onConfirm={handleDeleteConfirm}
                 />

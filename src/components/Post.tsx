@@ -6,25 +6,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import DeleteConfirmation from "./DeleteConfirmation";
 import { useAuth } from "../context/AuthContext";
+import TimeDisplay from "./TimeDisplay";
 
 interface Props {
     post: PostType;
     setDisplayImage: React.Dispatch<React.SetStateAction<string | null>>;
 };
-
-export const calculateTime = (created_at: string) => {
-    const now = new Date();
-    const createdDate = new Date(created_at);
-    const seconds = Math.floor((now.getTime() - createdDate.getTime()) / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if(seconds < 60) return `${seconds} seconds ago`;
-    if(minutes < 60) return `${minutes} minutes ago`;
-    if(hours < 24) return `${hours} hours ago`;
-    return `${days} days ago`;
-}
 
 const getCommentCount = async(post_id: number) => {
     const { error, count } = await supabase.from("comments").select("*", {count: 'exact'}).eq("post_id", post_id);
@@ -89,7 +76,8 @@ export default function Post({ post, setDisplayImage }: Props) {
                 </div>
                 <div>
                 <p className="font-semibold text-sm">{post.email}</p>
-                <p className="text-gray-500 text-xs">{calculateTime(post.created_at)}</p>
+                {/*<p className="text-gray-500 text-xs">{calculateTime(post.created_at)}</p>*/}
+                <TimeDisplay timestamp={post.created_at}/>
                 </div>
                 {user && is_creator() &&
                     <span className="ml-auto cursor-pointer" onClick={handleDelete}>🗑️</span>
@@ -99,6 +87,7 @@ export default function Post({ post, setDisplayImage }: Props) {
             {showDeleteConfirmation && 
                 <DeleteConfirmation
                     isOpen={showDeleteConfirmation}
+                    isPost={true}
                     onCancel={handleCancel}
                     onConfirm={handleDeleteConfirm}
                 />
