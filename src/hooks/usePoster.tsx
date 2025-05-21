@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 
-interface User {
+export interface User {
     id: string;
     created_at: string;
     username: string;

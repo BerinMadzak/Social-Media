@@ -15,7 +15,7 @@ interface Props {
     post_id: number;
 }
 
-const createReply = async(content: string, post_id: number, parent_comment_id: number, user_id?: string, email?: string, avatar_url?: string) => {
+const createReply = async(content: string, post_id: number, parent_comment_id: number, user_id?: string) => {
     if(!user_id) {
         throw new Error("You must be logged in to reply");
     }

@@ -20,10 +20,9 @@ const getPosts = async (user: string): Promise<PostType[]> => {
     let query = supabase.from("posts").select("*").limit(10).order("created_at", {ascending: false});
     if(user !== "") {
         const { data } = await supabase.from("users").select("id").eq("username", user).single();
-        console.log(data?.id);
         query = query.eq("user_id", data?.id);
     }
-    
+
     const { data, error } = await query;
 
     if(error) throw new Error(error.message);

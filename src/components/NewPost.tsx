@@ -26,8 +26,6 @@ const createPost = async (post: NewPost, image: File | null) => {
 
     const {data, error} = await supabase.from("posts").insert({...post, image_url});
 
-    console.log(error);
-
     if(error) throw new Error(error.message);
 
     return data;
