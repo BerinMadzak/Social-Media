@@ -18,10 +18,11 @@ const getUserById = async (user_id: string) => {
     return data;
 }
 
-export default function usePoster(user_id: string) {
+export default function usePoster(user_id: string | undefined, options? : { enabled: boolean }) {
     const query = useQuery<User | null, Error>({
         queryKey: ["user", user_id],
-        queryFn: () => getUserById(user_id)
+        queryFn: () => getUserById(user_id!),
+        enabled: options?.enabled
     });
 
     return query;

@@ -33,7 +33,7 @@ export default function AccountMenu({ username, profile, signOut }: Props) {
             className="focus:outline-none  cursor-pointer"
         >
             <img
-                src={data?.image_url ? data.image_url : "default-profile.png"}
+                src={data?.image_url ? data.image_url : "/default-profile.png"}
                 alt="Profile"
                 className="w-10 h-10 rounded-full border-2 border-gray-300 hover:border-blue-500 transition"
             />

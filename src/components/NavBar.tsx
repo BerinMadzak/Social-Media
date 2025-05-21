@@ -6,8 +6,12 @@ import usePoster from "../hooks/usePoster";
 export default function NavBar() {
     const {signOut, user} = useAuth();
 
-    const { data } = usePoster(user!.id);
+    const { data } = usePoster(user?.id, { enabled: !!user });
     const navigate = useNavigate();
+
+    const profile = () => {
+        navigate(`/profile/${data?.username}`);
+    }
 
     return (
         <nav className="fixed top-0 w-full bg-black">
@@ -15,16 +19,7 @@ export default function NavBar() {
                 <Link to="/" className="font-mono font-bold text-white text-xl">Social Media</Link>
                 {user ? (
                     <>
-                        <div className="flex items-center space-x-5">
-                            {user.user_metadata?.avatar_url && (
-                                <img 
-                                    src={user.user_metadata.avatar_url}
-                                    alt="User avatar"
-                                    className="w-8 h-8 rounded-full object-cover"
-                                />
-                            )}
-                        </div>
-                        <AccountMenu username={data!.username} profile={() => {}} signOut={signOut}/>
+                        {data && <AccountMenu username={data!.username} profile={profile} signOut={signOut}/>}
                     </>
                 ) : (
                     <div className="flex gap-2">

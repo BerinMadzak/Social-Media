@@ -3,6 +3,10 @@ import { supabase } from "../supabase-client";
 import Post from "./Post";
 import { useState } from "react";
 
+interface Props {
+    user: string;
+}
+
 export interface PostType {
     id: number;
     created_at: string;
@@ -12,18 +16,25 @@ export interface PostType {
     user_id: string;
 };
 
-const getPosts = async (): Promise<PostType[]> => {
-    const { data, error } = await supabase.from("posts").select("*").limit(10).order("created_at", {ascending: false});
+const getPosts = async (user: string): Promise<PostType[]> => {
+    let query = supabase.from("posts").select("*").limit(10).order("created_at", {ascending: false});
+    if(user !== "") {
+        const { data } = await supabase.from("users").select("id").eq("username", user).single();
+        console.log(data?.id);
+        query = query.eq("user_id", data?.id);
+    }
+    
+    const { data, error } = await query;
 
     if(error) throw new Error(error.message);
 
     return data as PostType[];
 }
 
-export default function Posts() {
+export default function Posts({ user }: Props) {
     const [displayImage, setDisplayImage] = useState<string | null>(null);
 
-    const { data, error, isLoading } = useQuery<PostType[], Error>({queryKey: ["posts"], queryFn: getPosts});
+    const { data, error, isLoading } = useQuery<PostType[], Error>({queryKey: ["posts"], queryFn: () => getPosts(user)});
 
     if(isLoading) return <div className="text-white">Loading...</div>;
 

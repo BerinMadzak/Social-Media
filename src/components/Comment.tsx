@@ -110,7 +110,7 @@ export default function Comment({ comment, post_id }: Props) {
         <div className="bg-gray-100 p-4 rounded-lg shadow-sm border border-gray-200 my-4">
             <div className="flex items-center mb-2">
                 <div className="w-10 h-10 mr-3 rounded-full overflow-hidden">
-                <img src={poster?.image_url || "default-profile.png"} alt={`User avatar`} className="w-full h-full object-cover" />
+                <img src={poster?.image_url || "/default-profile.png"} alt={`User avatar`} className="w-full h-full object-cover" />
                 </div>
                 <div>
                 <p className="font-semibold text-sm">{poster?.username}</p>

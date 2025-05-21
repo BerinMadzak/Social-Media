@@ -9,6 +9,7 @@ import { AuthProvider } from './context/AuthContext'
 import SignUpPage from './pages/SignUpPage'
 import SignInPage from './pages/SignInPage'
 import RedirectToHome from './components/RedirectToHome'
+import ProfilePage from './pages/ProfilePage'
 
 const client = new QueryClient();
 
@@ -19,7 +20,8 @@ const router = createBrowserRouter([
     children: [
       {index: true, element: <HomePage />},
       {path: '/signup', element: <RedirectToHome><SignUpPage /></RedirectToHome>},
-      {path: '/signin', element: <RedirectToHome><SignInPage /></RedirectToHome>}
+      {path: '/signin', element: <RedirectToHome><SignInPage /></RedirectToHome>},
+      {path: '/profile/:user', element: <ProfilePage />}
     ]
   }
 ]);

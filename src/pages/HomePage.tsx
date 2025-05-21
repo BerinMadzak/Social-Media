@@ -13,7 +13,7 @@ export default function HomePage() {
       <div className="flex flex-col mt-10 w-[50%] gap-10">
         <Search onSearch={onSearch}/>
         <NewPost />
-        <Posts />
+        <Posts user="" />
       </div>
     </div>
   )
