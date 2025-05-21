@@ -75,15 +75,15 @@ export default function NewPost() {
         <form onSubmit={handleSubmit}>
             <textarea 
                 cols={100} 
-                rows={6} 
+                rows={5} 
                 placeholder="Share your thoughts... (300 character limit)" 
                 className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                 maxLength={300}
                 required
                 onChange={(e) => setContent(e.target.value)}
             ></textarea>
-            <div className="flex gap-x-2">
-                <div className="flex items-center justify-center w-full">
+            <div className="flex gap-x-2 flex-col md:flex-row">
+                <div className="flex flex-col items-center justify-center w-full">
                     <label htmlFor="image" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg 
@@ -113,18 +113,19 @@ export default function NewPost() {
                         />
                     </label>
                     {file && (
-                        <div className="px-4 py-2 bg-blue-100 text-blue-700 rounded-md shadow-md h-full">
-                            Selected file: {file.name}
+                        <div className="flex flex-col items-center w-full px-4 py-2 bg-blue-100 text-blue-700 rounded-md shadow-md h-full">
+                            <p>Selected file:</p>
+                            <p className="w-full max-sm:truncate w-40 text-center">{file.name}</p>
                             <button 
                                 onClick={handleRemoveFile} 
-                                className="ml-4 text-sm text-red-500 hover:text-red-700 focus:outline-none"
+                                className="ml-4 mt-2 py-1 px-3 border border-red rounded text-sm text-red-500 hover:text-red-700 focus:outline-none"
                             >
                                 Remove
                             </button>
                         </div>
                     )}
                 </div>
-                <button className="w-[20%] rounded bg-blue-600 font-bold text-white cursor-pointer" disabled={isPending}>
+                <button className="md:w-[20%] rounded bg-blue-600 font-bold text-white cursor-pointer max-sm:mt-2" disabled={isPending}>
                     {isPending ? "Posting..." : "Post"}
                 </button>
             </div>

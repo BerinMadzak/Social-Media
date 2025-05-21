@@ -22,7 +22,7 @@ export default function TimeDisplay({ timestamp }: Props) {
   const timeAgo = calculateTime(timestamp);
 
   return (
-    <div className="relative group">
+    <div className="relative group w-[200px]">
       <span className="text-gray-500 text-xs">
         {timeAgo}
       </span>

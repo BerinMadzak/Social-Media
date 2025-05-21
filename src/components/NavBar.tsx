@@ -14,7 +14,7 @@ export default function NavBar() {
     }
 
     return (
-        <nav className="fixed top-0 w-full bg-black">
+        <nav className="fixed top-0 w-full bg-black z-50">
             <div className="px-5 mx-auto h-15 flex items-center justify-between">
                 <Link to="/" className="font-mono font-bold text-white text-xl">Social Media</Link>
                 {user ? (

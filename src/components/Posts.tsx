@@ -55,7 +55,7 @@ export default function Posts({ user, search }: Props) {
                     />
                 </div>
             }
-            <div className="flex flex-wrap flex-column gap-6 justify-center">
+            <div className="flex flex-wrap md:flex-col gap-6 justify-center">
                 {data?.map((post, key) => (<Post post={post} setDisplayImage={setDisplayImage} key={key} />))}
             </div>
         </div>

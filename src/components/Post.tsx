@@ -71,7 +71,7 @@ export default function Post({ post, setDisplayImage }: Props) {
     if(isPending) return <div>Loading...</div>
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4 w-[80%]">
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
             <div className="flex items-center mb-2">
                 <div className="w-10 h-10 mr-3 rounded-full overflow-hidden">
                     <img src={poster?.image_url || "/default-profile.png"} alt={`User avatar`} className="w-full h-full object-cover" />
