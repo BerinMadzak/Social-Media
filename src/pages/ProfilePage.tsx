@@ -7,7 +7,7 @@ export default function ProfilePage() {
     return (
         <div className="flex justify-center">
         <div className="flex flex-col mt-10 w-[50%] gap-10">
-            {user && <Posts user={user} />}
+            {user && <Posts user={user} search="" />}
         </div>
         </div>
     );
