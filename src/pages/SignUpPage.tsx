@@ -72,112 +72,107 @@ export default function SignUpPage() {
     };
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Username Field */}
-        <div>
-            <label className="block text-sm font-medium text-gray-700">Username</label>
-            <Controller
-            name="username"
-            control={control}
-            render={({ field }) => (
-                <input
-                {...field}
-                type="text"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your username"
-                />
-            )}
-            />
-            {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
-        </div>
+        <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg mt-30">
+            <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-        {/* Email Field */}
-        <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <Controller
-            name="email"
-            control={control}
-            render={({ field }) => (
-                <input
-                {...field}
-                type="email"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your email"
+            <div>
+                <label className="block text-sm font-medium text-gray-700">Username</label>
+                <Controller
+                name="username"
+                control={control}
+                render={({ field }) => (
+                    <input
+                    {...field}
+                    type="text"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter your username"
+                    />
+                )}
                 />
-            )}
-            />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-        </div>
+                {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
+            </div>
 
-        {/* Date of Birth Field */}
-        <div>
-            <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
-            <Controller
-            name="dob"
-            control={control}
-            render={({ field }) => (
-                <input
-                {...field}
-                type="date"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <div>
+                <label className="block text-sm font-medium text-gray-700">Email</label>
+                <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                    <input
+                    {...field}
+                    type="email"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter your email"
+                    />
+                )}
                 />
-            )}
-            />
-            {errors.dob && <p className="text-red-500 text-sm">{errors.dob.message}</p>}
-        </div>
+                {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+            </div>
 
-        {/* Password Field */}
-        <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
-            <Controller
-            name="password"
-            control={control}
-            render={({ field }) => (
-                <input
-                {...field}
-                type="password"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your password"
+            <div>
+                <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
+                <Controller
+                name="dob"
+                control={control}
+                render={({ field }) => (
+                    <input
+                    {...field}
+                    type="date"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                )}
                 />
-            )}
-            />
-            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
-        </div>
+                {errors.dob && <p className="text-red-500 text-sm">{errors.dob.message}</p>}
+            </div>
 
-        {/* Confirm Password Field */}
-        <div>
-            <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
-            <Controller
-            name="confirmPassword"
-            control={control}
-            render={({ field }) => (
-                <input
-                {...field}
-                type="password"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Confirm your password"
+            <div>
+                <label className="block text-sm font-medium text-gray-700">Password</label>
+                <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                    <input
+                    {...field}
+                    type="password"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter your password"
+                    />
+                )}
                 />
-            )}
-            />
-            {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
-        </div>
+                {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+            </div>
+           
+            <div>
+                <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+                <Controller
+                name="confirmPassword"
+                control={control}
+                render={({ field }) => (
+                    <input
+                    {...field}
+                    type="password"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Confirm your password"
+                    />
+                )}
+                />
+                {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
+            </div>
 
-        {/* Submit Button */}
-        <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg"
-        >
-            {'Sign Up'}
-        </button>
-        {isError && (
-            <p className="text-red-500 text-sm mt-4">An error occurred during signup. Please try again.</p>
-        )}
-        {isSuccess && (
-            <p className="text-green-500 text-sm mt-4">Signup successful! Welcome aboard.</p>
-        )}
-        </form>
-    </div>
+            <button
+                type="submit"
+                className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg cursor-pointer"
+            >
+                {'Sign Up'}
+            </button>
+            {isError && (
+                <p className="text-red-500 text-sm mt-4">An error occurred during signup. Please try again.</p>
+            )}
+            {isSuccess && (
+                <p className="text-green-500 text-sm mt-4">Signup successful! Welcome aboard.</p>
+            )}
+            </form>
+        </div>
     );
 }
