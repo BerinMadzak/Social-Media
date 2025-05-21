@@ -1,4 +1,4 @@
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { supabase } from "../supabase-client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -64,7 +64,7 @@ export default function SignUpPage() {
 
     const { mutate, isError, isSuccess } = useMutation({
         mutationFn: signupUser,
-        onSuccess: () => navigate("/")
+        onSuccess: () => navigate("/signin")
     });
 
     const onSubmit = (data: SignupType) => {

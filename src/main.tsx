@@ -7,6 +7,7 @@ import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import { AuthProvider } from './context/AuthContext'
 import SignUpPage from './pages/SignUpPage'
+import SignInPage from './pages/SignInPage'
 
 const client = new QueryClient();
 
@@ -16,7 +17,8 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {index: true, element: <HomePage />},
-      {path: '/signup', element: <SignUpPage />}
+      {path: '/signup', element: <SignUpPage />},
+      {path: '/signin', element: <SignInPage />}
     ]
   }
 ]);
