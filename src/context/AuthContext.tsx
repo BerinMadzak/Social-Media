@@ -4,7 +4,6 @@ import { supabase } from "../supabase-client";
 
 interface AuthContextType { 
     user: User | null;
-    signInWithGoogle: () => void;
     signOut: () => void;
 }
 
@@ -27,15 +26,11 @@ export const AuthProvider = ({children} : {children: React.ReactNode}) => {
         };
     }, []);
 
-    const signInWithGoogle = () => {
-        supabase.auth.signInWithOAuth({provider: "google"});
-    };
-
     const signOut = () => {
 		supabase.auth.signOut();
     };
 
-    return <AuthContext.Provider value={{user, signInWithGoogle, signOut}}> {children} </AuthContext.Provider>
+    return <AuthContext.Provider value={{user, signOut}}> {children} </AuthContext.Provider>
 };
 
 export const useAuth = (): AuthContextType => {

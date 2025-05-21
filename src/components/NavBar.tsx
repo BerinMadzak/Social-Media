@@ -1,12 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import AccountMenu from "./AccountMenu";
+import usePoster from "../hooks/usePoster";
 
 export default function NavBar() {
     const {signOut, user} = useAuth();
 
+    const { data } = usePoster(user!.id);
     const navigate = useNavigate();
-
-    const username = user?.user_metadata.user_name || user?.email;
 
     return (
         <nav className="fixed top-0 w-full bg-black">
@@ -15,7 +16,6 @@ export default function NavBar() {
                 {user ? (
                     <>
                         <div className="flex items-center space-x-5">
-                            <span className="text-gray-300">{username}</span>
                             {user.user_metadata?.avatar_url && (
                                 <img 
                                     src={user.user_metadata.avatar_url}
@@ -24,12 +24,7 @@ export default function NavBar() {
                                 />
                             )}
                         </div>
-                        <button 
-                            onClick={signOut} 
-                            className="bg-red-500 px-3 py-1 rounded text-white font-bold cursor-pointer"
-                        >
-                            Sign Out
-                        </button>
+                        <AccountMenu username={data!.username} profile={() => {}} signOut={signOut}/>
                     </>
                 ) : (
                     <div className="flex gap-2">
