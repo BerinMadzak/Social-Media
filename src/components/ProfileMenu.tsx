@@ -8,7 +8,7 @@ interface Props {
     signOut: () => void;
 }
 
-export default function AccountMenu({ username, profile, signOut }: Props) {
+export default function ProfileMenu({ username, profile, signOut }: Props) {
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 

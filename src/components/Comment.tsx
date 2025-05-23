@@ -7,6 +7,7 @@ import LikeButton from "./LikeButton";
 import DeleteConfirmation from "./DeleteConfirmation";
 import TimeDisplay from "./TimeDisplay";
 import usePoster from "../hooks/usePoster";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     comment: CommentType & {
@@ -52,6 +53,7 @@ export default function Comment({ comment, post_id }: Props) {
     const { user } = useAuth();
     const queryClient = useQueryClient();
     const { data: poster } = usePoster(comment.user_id);
+    const navigate = useNavigate();
 
     const { data: comment_count } = useQuery<number, Error>({
         queryKey: ["comment_count", comment.id, false],
@@ -113,7 +115,12 @@ export default function Comment({ comment, post_id }: Props) {
                 <img src={poster?.image_url || "/default-profile.png"} alt={`User avatar`} className="w-full h-full object-cover" />
                 </div>
                 <div>
-                <p className="font-semibold text-sm">{poster?.username}</p>
+                <p 
+                    className="inline-block font-semibold text-sm cursor-pointer hover:underline" 
+                    onClick={() => navigate(`/profile/${poster?.username}`)}
+                >
+                    {poster?.username}
+                </p>
                 <TimeDisplay timestamp={comment.created_at} />
                 </div>
                 {user && is_creator() &&

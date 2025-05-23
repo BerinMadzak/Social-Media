@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import AccountMenu from "./AccountMenu";
+import ProfileMenu from "./ProfileMenu";
 import usePoster from "../hooks/usePoster";
 
 export default function NavBar() {
@@ -19,7 +19,7 @@ export default function NavBar() {
                 <Link to="/" className="font-mono font-bold text-white text-xl">Social Media</Link>
                 {user ? (
                     <>
-                        {data && <AccountMenu username={data!.username} profile={profile} signOut={signOut}/>}
+                        {data && <ProfileMenu username={data!.username} profile={profile} signOut={signOut}/>}
                     </>
                 ) : (
                     <div className="flex gap-2">
