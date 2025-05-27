@@ -63,7 +63,7 @@ export default function ProfileBanner({ user }: Props) {
             <div className="flex flex-col items-center mb-2">
                 <div 
                     className={"relative w-30 h-30 mr-3 rounded-full overflow-hidden border-3 border-transparent " 
-                        + (current_user?.id === user.id ? "hover:border-black" : "")}
+                        + (current_user?.id === user.id ? "hover:border-black transition-all duration-100" : "")}
                 >
                     <img 
                         src={user.image_url || "/default-profile.png"} 
@@ -74,7 +74,7 @@ export default function ProfileBanner({ user }: Props) {
                         <label htmlFor="image">
                             <img 
                                 src={"/upload-photo.png"}  
-                                className="absolute top-0 left-0 w-full h-full object-cover bg-[rgba(0,0,0,0.3)] opacity-0 hover:opacity-100 transition-all duration-100" 
+                                className="absolute top-0 left-0 w-full h-full object-cover bg-[rgba(0,0,0,0.3)] opacity-0 hover:opacity-100 transition-all duration-100 cursor-pointer" 
                             />
                         </label>
                     }
