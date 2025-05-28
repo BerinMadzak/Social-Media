@@ -61,7 +61,7 @@ export default function ProfileBanner({ user }: Props) {
     if(user === null || user === undefined) return <div className="text-white">Loading...</div>
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4 w-[60%]">
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb w-[60%]">
             <div className="flex flex-col items-center mb-2">
                 <div 
                     className={"relative w-30 h-30 mr-3 rounded-full overflow-hidden border-3 border-transparent " 

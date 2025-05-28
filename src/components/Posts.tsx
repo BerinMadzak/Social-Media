@@ -43,6 +43,8 @@ export default function Posts({ user, search }: Props) {
 
     if(error) return <div className="text-red">{error.message}</div>;
 
+    if(user && data?.length === 0) return <div className="flex justify-center text-white text-semibold">User has not posted yet</div>
+
     return (
         <div>
             {search !== "" && <p className="mb-4 text-gray-400">Displaying search results for: <span className="italic font-semibold">"{search}"</span></p>}
