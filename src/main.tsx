@@ -23,7 +23,8 @@ const router = createBrowserRouter([
       {path: '/signup', element: <RedirectToHome logged={true}><SignUpPage /></RedirectToHome>},
       {path: '/signin', element: <RedirectToHome logged={true}><SignInPage /></RedirectToHome>},
       {path: '/profile/:user', element: <ProfilePage />},
-      {path: '/messages/:user', element: <RedirectToHome logged={false}><MessagePage /></RedirectToHome>}
+      {path: '/messages/:user', element: <RedirectToHome logged={false}><MessagePage /></RedirectToHome>},
+      {path: '*', element: <HomePage />}
     ]
   }
 ]);
