@@ -24,7 +24,8 @@ interface NewMessage {
 const getMessages = async(user1: string, user2: string): Promise<MessageType[]> => {
     const { data, error } = await supabase
         .from("messages").select("*")
-        .or(`and(sender_id.eq.${user1},receiver_id.eq.${user2}),and(sender_id.eq.${user2},receiver_id.eq.${user1})`);
+        .or(`and(sender_id.eq.${user1},receiver_id.eq.${user2}),and(sender_id.eq.${user2},receiver_id.eq.${user1})`)
+        .order("created_at");
 
     if(error) throw new Error(error.message);
 
@@ -49,7 +50,7 @@ export default function MessagePage() {
 
     const queryClient = useQueryClient();
 
-    const { mutate, isPending, isError, error: error2 } = useMutation({
+    const { mutate, isPending, isError } = useMutation({
         mutationFn: (message: NewMessage) => {
             return createMessage(message);
         },

@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { User } from "../hooks/usePoster";
 import { MessageType } from "../pages/MessagePage";
 import TimeDisplay from "./TimeDisplay";

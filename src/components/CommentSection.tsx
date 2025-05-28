@@ -22,7 +22,7 @@ export interface CommentType {
     parent_comment_id?: number | null;
 }
 
-const createCommment = async (comment: NewComment, post_id: number, user_id?: string, email?: string, avatar_url?: string) => {
+const createCommment = async (comment: NewComment, post_id: number, user_id?: string) => {
     if(!user_id) throw new Error("You must be logged in to comment");
 
     const { error } = await supabase.from("comments").insert({
@@ -78,7 +78,7 @@ export default function CommentSection({ post_id }: Props) {
 
     const { mutate, isPending, isError } = useMutation({
         mutationFn: (comment: NewComment) => 
-            createCommment(comment, post_id, user?.id, user?.user_metadata.email, user?.user_metadata.avatar_url),
+            createCommment(comment, post_id, user?.id),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ["comments", post_id]});
             queryClient.invalidateQueries({queryKey: ["comment_count", post_id, true]});
