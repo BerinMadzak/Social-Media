@@ -4,12 +4,15 @@ import { ReactNode } from "react";
 
 interface Props {
     children: ReactNode;
+    logged: boolean;
 }
 
-export default function RedirectToHome({ children }: Props) {
-    const { user } = useAuth();
+export default function RedirectToHome({ children, logged }: Props) {
+    const { user, loading } = useAuth();
     
-    if(user) return <Navigate to="/" replace />;
+    if(loading) return null;
+    
+    if((logged && !!user) || (!logged && !user)) return <Navigate to="/" replace />;
 
     return children;
 }

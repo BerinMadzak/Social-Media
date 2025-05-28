@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
 import { User } from "../hooks/usePoster";
 import { supabase } from "../supabase-client";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     user: User | null | undefined;
@@ -35,6 +36,7 @@ export default function ProfileBanner({ user }: Props) {
     const { user: current_user } = useAuth();
     
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     const { mutate } = useMutation({
         mutationFn: (data: {image: File, user: User}) => {
@@ -88,7 +90,9 @@ export default function ProfileBanner({ user }: Props) {
                 </div>
                 <div className="flex gap-2 items-center">
                     <p className="font-semibold text-xl mt-2">{user.username}</p>
-                    {current_user?.id === user.id && <p className="text-xl pt-2 cursor-pointer">✉️</p>}
+                    {current_user?.id !== user.id && 
+                        <p className="text-xl pt-2 cursor-pointer" onClick={() => navigate(`/messages/${user.username}`)}>✉️</p>
+                    }
                 </div>
             </div>
         </div>

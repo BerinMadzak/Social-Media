@@ -5,16 +5,19 @@ import { supabase } from "../supabase-client";
 interface AuthContextType { 
     user: User | null;
     signOut: () => void;
+    loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({children} : {children: React.ReactNode}) => {
     const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => { 
         supabase.auth.getSession().then(({data: { session }}) => {
             setUser(session?.user ?? null);
+            setLoading(false);
         });
 
         const {data: listener} = supabase.auth.onAuthStateChange((_, session) => {
@@ -30,7 +33,7 @@ export const AuthProvider = ({children} : {children: React.ReactNode}) => {
 		supabase.auth.signOut();
     };
 
-    return <AuthContext.Provider value={{user, signOut}}> {children} </AuthContext.Provider>
+    return <AuthContext.Provider value={{user, signOut, loading}}> {children} </AuthContext.Provider>
 };
 
 export const useAuth = (): AuthContextType => {

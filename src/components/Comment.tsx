@@ -52,8 +52,9 @@ export default function Comment({ comment, post_id }: Props) {
 
     const { user } = useAuth();
     const queryClient = useQueryClient();
-    const { data: poster } = usePoster(comment.user_id);
     const navigate = useNavigate();
+    
+    const { data: poster } = usePoster(comment.user_id);
 
     const { data: comment_count } = useQuery<number, Error>({
         queryKey: ["comment_count", comment.id, false],
