@@ -46,6 +46,8 @@ export default function NewPost() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ["posts"]});
+            handleRemoveFile();
+            setContent("");
         }
     });
 
@@ -80,6 +82,7 @@ export default function NewPost() {
                 className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                 maxLength={300}
                 required
+                value={content}
                 onChange={(e) => setContent(e.target.value)}
             ></textarea>
             <div className="flex gap-x-2 flex-col md:flex-row">
