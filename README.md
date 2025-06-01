@@ -1,6 +1,6 @@
 # Webshop 
 
-You can try the project here: 
+You can try the project here: https://social-media-lemon-beta.vercel.app/
 
 A modern social media application built with **React**, **Vite**, **TypeScript**, **TailwindCSS** and **Supabase**. It allows users to create an account, make posts, interact with other posts through likes and comments, message other users and more.
 
@@ -16,7 +16,7 @@ A modern social media application built with **React**, **Vite**, **TypeScript**
 ## Tech Stack
 - **Frontend**: React, Vite, Typescript, TailwindCSS
 - **Backend**: Supabase
-- **Deployment**: Vercel (frontend)
+- **Deployment**: Vercel
 - **Version Control**: Git, GitHub
 
 ## Screenshots
